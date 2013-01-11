@@ -1,0 +1,10 @@
+body{
+     background-color: #67a09f;
+}
+.Worker{
+    background-color: aqua;
+}
+.error {
+    color: #0307cd;
+    font: bold
+}

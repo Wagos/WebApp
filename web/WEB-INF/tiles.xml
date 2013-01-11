@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+    <definition name="template" template="/WEB-INF/pages/Template.jsp">
+        <put-attribute name="title" value="Spring3WebApp"/>
+        <put-attribute name="header" value="/WEB-INF/pages/Header.jsp"/>
+        <put-attribute name="body" value="Нет тела О_О"/>
+        <put-attribute name="footer" value="/WEB-INF/pages/Footer.jsp"/>
+    </definition>
+
+    <definition name="HomePage" extends="template">
+        <put-attribute name="body" value="/WEB-INF/pages/HomePage.jsp"/>
+    </definition>
+
+    <definition name="WorkerPage" extends="template">
+        <put-attribute name="body" value="/WEB-INF/pages/worker/worker.jsp"/>
+    </definition>
+
+    <definition name="ProjectPage" extends="template">
+        <put-attribute name="body" value="/WEB-INF/pages//project/project.jsp"/>
+    </definition>
+
+    <definition name="RolesPage" extends="template">
+        <put-attribute name="body" value="/WEB-INF/pages/role/roles.jsp"/>
+    </definition>
+
+    <definition name="WorkersRolesPage" extends="template">
+        <put-attribute name="body" value="/WEB-INF/pages/workersRoles/workersRoles.jsp"/>
+    </definition>
+
+    <definition name="WorkersRolesEditPage" extends="template">
+        <put-attribute name="body" value="/WEB-INF/pages/workersRoles/workersRolesEdit.jsp"/>
+    </definition>
+
+    <definition name="WorkerEditPage" extends="template">
+        <put-attribute name="body" value="/WEB-INF/pages/worker/workerEdit.jsp"/>
+    </definition>
+
+    <definition name="ProjectEditPage" extends="template">
+        <put-attribute name="body" value="/WEB-INF/pages/project/projectEdit.jsp"/>
+    </definition>
+
+</tiles-definitions>
