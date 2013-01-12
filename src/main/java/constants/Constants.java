@@ -41,4 +41,7 @@ public class Constants {
     public static final String DELETE = "delete";
     public static final String UPDATE = "update";
 
+    //----------Path------------------//
+    public static final String PATH_SEPARATOR = "/";
+    public static final String WORKERS_ROLES_DATA = "WorkersRolesData";
 }

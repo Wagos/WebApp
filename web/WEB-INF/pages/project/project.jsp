@@ -12,7 +12,7 @@
 </head>
 <h1><fmt:message key="projects"/></h1>
 <%--<form action="SelectProject" method="POST">--%>
-    <table border="1" style="float: left">
+    <table id="table" border="1" style="float: left">
         <tr>
             <td><fmt:message key="project.id"/></td>
             <td><fmt:message key="project.name"/></td>
@@ -27,6 +27,7 @@
             </tr>
         </c:forEach>
     </table>
+<button class="Project" add>Add</button>
     <br/>
     <%--<input type="submit" name="update" value="<fmt:message key="button.project.update"/>"/>--%>
     <%--<input type="submit" name="delete" value="<fmt:message key="button.project.delete"/>"/>--%>

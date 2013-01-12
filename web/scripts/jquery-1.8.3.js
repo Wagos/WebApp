@@ -2898,8 +2898,8 @@ jQuery.event = {
 
 		// Clean up the event in case it is being reused
 		event.result = undefined;
-		if ( !event.url ) {
-			event.url = elem;
+		if ( !event.target ) {
+			event.target = elem;
 		}
 
 		// Clone any incoming data and prepend the event, creating the handler arg list
@@ -2958,7 +2958,7 @@ jQuery.event = {
 				// Can't use an .isFunction() check here because IE6/7 fails that test.
 				// Don't do default actions on window, that's where global variables be (#6170)
 				// IE<9 dies on focus/blur to hidden element (#1486)
-				if ( ontype && elem[ type ] && ((type !== "focus" && type !== "blur") || event.url.offsetWidth !== 0) && !jQuery.isWindow( elem ) ) {
+				if ( ontype && elem[ type ] && ((type !== "focus" && type !== "blur") || event.target.offsetWidth !== 0) && !jQuery.isWindow( elem ) ) {
 
 					// Don't re-trigger an onFOO event when we call its FOO() method
 					old = elem[ ontype ];
@@ -3008,7 +3008,7 @@ jQuery.event = {
 		// Avoid non-left-click bubbling in Firefox (#3861)
 		if ( delegateCount && !(event.button && event.type === "click") ) {
 
-			for ( cur = event.url; cur != this; cur = cur.parentNode || this ) {
+			for ( cur = event.target; cur != this; cur = cur.parentNode || this ) {
 
 				// Don't process clicks (ONLY) on disabled elements (#6911, #8165, #11382, #11764)
 				if ( cur.disabled !== true || event.type !== "click" ) {
@@ -3104,7 +3104,7 @@ jQuery.event = {
 
 			// Calculate pageX/Y if missing and clientX/Y available
 			if ( event.pageX == null && original.clientX != null ) {
-				eventDoc = event.url.ownerDocument || document;
+				eventDoc = event.target.ownerDocument || document;
 				doc = eventDoc.documentElement;
 				body = eventDoc.body;
 
@@ -3114,7 +3114,7 @@ jQuery.event = {
 
 			// Add relatedTarget, if necessary
 			if ( !event.relatedTarget && fromElement ) {
-				event.relatedTarget = fromElement === event.url ? original.toElement : fromElement;
+				event.relatedTarget = fromElement === event.target ? original.toElement : fromElement;
 			}
 
 			// Add which for click: 1 === left; 2 === middle; 3 === right
@@ -3146,13 +3146,13 @@ jQuery.event = {
 		}
 
 		// Fix target property, if necessary (#1925, IE 6/7/8 & Safari2)
-		if ( !event.url ) {
-			event.url = originalEvent.srcElement || document;
+		if ( !event.target ) {
+			event.target = originalEvent.srcElement || document;
 		}
 
 		// Target should not be a text node (#504, Safari)
-		if ( event.url.nodeType === 3 ) {
-			event.url = event.url.parentNode;
+		if ( event.target.nodeType === 3 ) {
+			event.target = event.target.parentNode;
 		}
 
 		// For mouse/key events, metaKey==false if it's undefined (#3368, #11328; IE6/7/8)
@@ -3362,7 +3362,7 @@ if ( !jQuery.support.submitBubbles ) {
 			// Lazy-add a submit handler when a descendant form may potentially be submitted
 			jQuery.event.add( this, "click._submit keypress._submit", function( e ) {
 				// Node name check avoids a VML-related crash in IE (#9807)
-				var elem = e.url,
+				var elem = e.target,
 					form = jQuery.nodeName( elem, "input" ) || jQuery.nodeName( elem, "button" ) ? elem.form : undefined;
 				if ( form && !jQuery._data( form, "_submit_attached" ) ) {
 					jQuery.event.add( form, "submit._submit", function( event ) {
@@ -3425,7 +3425,7 @@ if ( !jQuery.support.changeBubbles ) {
 			}
 			// Delegated event; lazy-add a change handler on descendant inputs
 			jQuery.event.add( this, "beforeactivate._change", function( e ) {
-				var elem = e.url;
+				var elem = e.target;
 
 				if ( rformElems.test( elem.nodeName ) && !jQuery._data( elem, "_change_attached" ) ) {
 					jQuery.event.add( elem, "change._change", function( event ) {
@@ -3439,7 +3439,7 @@ if ( !jQuery.support.changeBubbles ) {
 		},
 
 		handle: function( event ) {
-			var elem = event.url;
+			var elem = event.target;
 
 			// Swallow native change events from checkbox/radio, we already triggered them above
 			if ( this !== elem || event.isSimulated || event.isTrigger || (elem.type !== "radio" && elem.type !== "checkbox") ) {
@@ -3462,7 +3462,7 @@ if ( !jQuery.support.focusinBubbles ) {
 		// Attach a single capturing handler while someone wants focusin/focusout
 		var attaches = 0,
 			handler = function( event ) {
-				jQuery.event.simulate( fix, event.url, jQuery.event.fix( event ), true );
+				jQuery.event.simulate( fix, event.target, jQuery.event.fix( event ), true );
 			};
 
 		jQuery.event.special[ fix ] = {

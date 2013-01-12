@@ -21,6 +21,7 @@
     <br/>
     <s:select path="roleName.name" items="${roles}" itemLabel="name" itemValue="name"/>
     <br/>
+
     <input type="submit" value="<fmt:message key="button.save"/>"/>
 </s:form>
 <a href="WorkersRolesPage"><button><fmt:message key="button.back"/></button></a>

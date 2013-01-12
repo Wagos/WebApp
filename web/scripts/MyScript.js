@@ -19,7 +19,7 @@
             var editing;
             var self=$(this);
 
-            $(this).bind(options.event,function(){
+            self.bind(options.event,function(){
 
                 if(editing){
                     return;
@@ -52,8 +52,9 @@
                     url: url,
                     success: function(){
                         if(adding){
-                            var root=$(document.createElement(options.rootElem));
-                            $("input",form).each(function(){
+                            var root=$(document.createElement(options.rootElem))
+                                .addClass(self.attr("class"));
+                            $("input,select",form).each(function(){
                                 var elem=$(document.createElement(options.childElem));
                                 elem.text($(this).val())
                                     .attr("id",$(this).attr("id"))
@@ -106,12 +107,33 @@
                     if(options.inputList){
                         var list=options.inputList;
                         for(var key in list){
-                            form.append(jQuery('<input>')
-                                .attr("type",list[key])
-                                .attr("id",key)
-                                .attr("name",key)
-                                .val($("#"+key,parent).text())
-                            );
+                            var elem;
+                            switch (list[key]){
+                                case "select" :{
+                                    elem=$('<select>')
+                                        .attr("name",key)
+                                        .attr("id",key);
+                                    var data=options.data(elem);
+                                    if(data){
+                                        for(var id in data[key]){
+                                            elem.append(
+                                                $('<option>')
+                                                .val(id)
+                                                .text(data[key][id])
+                                            );
+                                        }
+                                    }
+                                    break;
+                                }
+                                default :{ elem=jQuery('<input>')
+                                    .attr("type",list[key])
+                                    .attr("id",key)
+                                    .attr("name",key);
+                                    if(list[key]!="file")
+                                        elem.val($("#"+key,parent).text());
+                                }
+                            }
+                            form.append(elem);
                         }
 
                     }else{
@@ -124,6 +146,7 @@
                     }
                 }
             },
+
             worker:{
                 inputList   : {
                     id      : 'hidden',
@@ -131,17 +154,39 @@
                     email   : 'text',
                     image   : 'file'
                 },
-                url  : "SaveWorker",
-                delUrl: "DeleteWorker"
+                url      : "SaveWorker",
+                delUrl   : "DeleteWorker"
             },
+
             project:{
                 inputList   : {
-                    id      : 'hidden',
-                    name     : 'text',
+                    id            : 'hidden',
+                    name          : 'text',
                     description   : 'text'
                 },
-                url  : "SaveProject",
-                delUrl: "DeleteProject"
+                url     : "SaveProject",
+                delUrl  : "DeleteProject"
+            },
+
+            workersRoles:{
+                url         : "SaveWorkersRole",
+                inputList   : {
+                    "project.id"    : 'select',
+                    "worker.id"     : 'select',
+                    "roleName.name"      : 'select'
+                },
+                data: function(elem){
+                    var data;
+                    $.ajax({
+                        async   : false,
+                        url     : "WorkersRolesData",
+                        dataType: "json",
+                        success : function(responseData){
+                            data=responseData;
+                        }
+                    });
+                    return data;
+                }
             }
         }
     };
@@ -167,6 +212,11 @@ jQuery(function () {
     $(".Project").dynamicEdit({
         type: "project",
         addTarget: "#table"
+    });
+
+    $(".WorkersRoles").dynamicEdit({
+        type    :   "workersRoles",
+        addTarget   :   "#table"
     });
 //    $("[editable]").live('click',function(){
 //        //var oldContent=$(this).html();

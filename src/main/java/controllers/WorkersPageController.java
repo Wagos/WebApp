@@ -2,6 +2,7 @@ package controllers;
 
 import constants.Constants;
 import entity.Worker;
+import exeptions.ImageUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -11,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
 import services.WorkerService;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -49,12 +52,42 @@ public class WorkersPageController {
         return Constants.WORKER_PAGE;
     }
 
-    @RequestMapping(value = "/Save")
-    public String save(@Valid Worker worker,BindingResult bindingResult){
+    @RequestMapping(value = "/" + Constants.SAVE_WORKER, method = RequestMethod.POST)
+    @ResponseStatus(value = HttpStatus.OK)
+    public void saveWorker(@Valid Worker worker, BindingResult bindingResult,
+                           @RequestParam(value = "image", required = false)
+                           MultipartFile image) {
+
         if (bindingResult.hasErrors()) {
-            return null;
+            //return Constants.WORKER_EDIT_PAGE;
         }
-        workerService.saveWorker(worker);
-        return "Ololo";
+        try {
+            validatePhoto(image);
+            addWoker(worker, image);
+        } catch (ImageUploadException e) {
+            bindingResult.rejectValue("photo", e.getMessage());
+            // return Constants.WORKER_EDIT_PAGE;
+        }
+        //return Constants.REDIRECT + Constants.WORKER_PAGE;
+
+    }
+
+    private void validatePhoto(MultipartFile image) {
+        if (!image.isEmpty()) {
+            String contentType = image.getContentType();
+            if (!contentType.equals("image/jpeg") || contentType.equals("image/png")) {
+                throw new ImageUploadException("errors.worker.photo.format");
+            }
+        } else throw new ImageUploadException("errors.worker.photo.empty");
+    }
+
+    private void addWoker(Worker worker, MultipartFile image) {
+        try {
+            worker.setPhoto(image.getBytes());
+            workerService.saveWorker(worker);
+        } catch (IOException e) {
+            throw new ImageUploadException("errors.worker.photo.read", e);
+        }
+
     }
 }

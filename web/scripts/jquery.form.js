@@ -153,11 +153,11 @@ $.fn.ajaxSubmit = function(options) {
     }
 
     // perform a load on the target only if dataType is not provided
-    if (!options.dataType && options.url) {
+    if (!options.dataType && options.target) {
         var oldSuccess = options.success || function(){};
         callbacks.push(function(data) {
             var fn = options.replaceTarget ? 'replaceWith' : 'html';
-            $(options.url)[fn](data).each(oldSuccess, arguments);
+            $(options.target)[fn](data).each(oldSuccess, arguments);
         });
     }
     else if (options.success) {
@@ -415,10 +415,10 @@ $.fn.ajaxSubmit = function(options) {
         // take a breath so that pending repaints get some cpu time before the upload starts
         function doSubmit() {
             // make sure form attrs are set
-            var t = $form.attr('url'), a = $form.attr('action');
+            var t = $form.attr('target'), a = $form.attr('action');
 
             // update form attrs in IE friendly way
-            form.setAttribute('url',id);
+            form.setAttribute('target',id);
             if (!method) {
                 form.setAttribute('method', 'POST');
             }
@@ -491,9 +491,9 @@ $.fn.ajaxSubmit = function(options) {
                 // reset attrs and remove "extra" input elements
                 form.setAttribute('action',a);
                 if(t) {
-                    form.setAttribute('url', t);
+                    form.setAttribute('target', t);
                 } else {
-                    $form.removeAttr('url');
+                    $form.removeAttr('target');
                 }
                 $(extraInputs).remove();
             }
@@ -770,7 +770,7 @@ function doAjaxSubmit(e) {
     
 function captureSubmittingElement(e) {
     /*jshint validthis:true */
-    var target = e.url;
+    var target = e.target;
     var $el = $(target);
     if (!($el.is("[type=submit],[type=image]"))) {
         // is this a child element of the submit el?  (ex: a span within a button)
